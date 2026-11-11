@@ -1,0 +1,693 @@
+CAW ASSIGNMENT:
+
+
+MODULE 01 COMPLETE NOTES
+Setup & Clean Code (Production Backend Engineering)
+What was the actual goal of Module 1?
+
+Many beginners think:
+
+"We made a FastAPI project."
+
+❌ Wrong.
+
+The actual goal was:
+
+Learn how professional backend projects start before writing business logic.
+
+In production, companies spend time ensuring:
+
+The project structure is maintainable.
+Configuration is safe.
+Startup failures happen immediately.
+The application is easy to deploy.
+Future services can be added without rewriting everything.
+
+Module 1 was about building that foundation.
+
+Real-world analogy
+
+Imagine constructing a hospital.
+
+Do doctors start treating patients first?
+
+No.
+
+They first build:
+
+the building
+electricity
+water
+emergency exits
+oxygen supply
+power backup
+
+Only then do they admit patients.
+
+Backend engineering is the same.
+
+Before implementing features like login or payments, you build the infrastructure.
+
+What we built
+CAW_assignment
+│
+├── apps
+│   ├── api
+│   │   ├── app
+│   │   │     config.py
+│   │   │     main.py
+│   │   │
+│   │   ├── .env
+│   │   ├── .env.example
+│   │   ├── requirements.txt
+│   │   └── .venv
+│
+├── apps/worker        (future)
+│
+└── packages/shared    (future)
+
+Notice something?
+
+Only the API exists.
+
+Worker and shared folders don't exist yet.
+
+But we already designed the architecture.
+
+This is called thinking ahead.
+
+Why Monorepo?
+
+There were two options.
+
+Single App
+
+project
+    api
+
+Monorepo
+
+project
+
+apps/
+    api/
+    worker/
+
+packages/
+    shared/
+Why did we choose Monorepo?
+
+Imagine after 6 months.
+
+Now your application has:
+
+API
+Email worker
+Analytics worker
+Notification service
+Scheduler
+
+If everything stays inside one folder:
+
+api/
+
+controllers/
+
+workers/
+
+email/
+
+notifications/
+
+analytics/
+
+scheduler/
+
+services/
+
+utils/
+
+helpers/
+
+
+Soon it becomes impossible to manage.
+
+Instead:
+
+apps/
+
+api/
+
+worker/
+
+packages/
+
+shared/
+
+Each application has its own responsibility.
+
+Biggest Interview Point
+
+Question:
+
+Why Monorepo?
+
+Answer:
+
+A monorepo allows multiple services to share common code while remaining independently deployable and scalable.
+
+This sentence alone impresses interviewers.
+
+Why apps/api?
+
+Because it is our HTTP server.
+
+Everything that responds to
+
+GET
+POST
+PUT
+DELETE
+
+belongs here.
+
+Why apps/worker?
+
+Worker does not answer HTTP requests.
+
+Example:
+
+User clicks link
+
+↓
+
+Store analytics
+
+↓
+
+Generate reports
+
+↓
+
+Send emails
+
+↓
+
+Cleanup database
+
+Workers do background work.
+
+Why packages/shared?
+
+Imagine API validates URL.
+
+Worker also validates URL.
+
+Without shared code:
+
+API validation
+
+Worker validation
+
+Two copies.
+
+Bug?
+
+Fix twice.
+
+Instead
+
+packages/shared
+
+URL validator
+
+Schema
+
+Database models
+
+Utilities
+
+Everyone imports from shared.
+
+Diagram 1 (Draw This)
+                Project
+
+                   │
+
+      ┌────────────┴─────────────┐
+
+      │                          │
+
+    apps                     packages
+
+      │                          │
+
+ ┌────┴─────┐               shared
+
+ │          │
+
+api      worker
+Virtual Environment
+
+Why?
+
+Suppose Python globally has
+
+FastAPI 0.100
+
+Your project needs
+
+FastAPI 0.141
+
+Another project needs
+
+FastAPI 0.98
+
+Chaos.
+
+Instead
+
+Project A
+
+.venv
+
+FastAPI 0.98
+
+----------------------
+
+Project B
+
+.venv
+
+FastAPI 0.141
+
+Every project has its own Python packages.
+
+Interview Question
+
+Why use virtual environments?
+
+Answer:
+
+To isolate dependencies between projects and guarantee reproducible builds.
+
+requirements.txt
+
+This file freezes package versions.
+
+Example
+
+FastAPI==0.141.1
+
+uvicorn==0.52.1
+
+python-dotenv==1.2.2
+
+Without this file
+
+Developer A
+
+FastAPI 0.141
+
+Developer B
+
+FastAPI 0.145
+
+Different behavior.
+
+Production bug.
+
+Environment Variables
+
+Instead of writing
+
+PORT=8000
+
+SECRET_KEY=abcd
+
+DATABASE_URL=...
+
+inside code
+
+we store them in
+
+.env
+Why?
+
+Because production changes.
+
+Local
+
+PORT=8000
+
+Cloud
+
+PORT=443
+
+Docker
+
+PORT=80
+
+The code never changes.
+
+Only .env changes.
+
+Diagram 2
+Developer
+
+        │
+
+        ▼
+
+     .env
+
+        │
+
+        ▼
+
+config.py
+
+        │
+
+        ▼
+
+Application
+config.py
+
+This became the single source of truth.
+
+Instead of
+
+os.getenv()
+
+os.getenv()
+
+os.getenv()
+
+os.getenv()
+
+everywhere,
+
+everything comes from
+
+settings
+
+Example
+
+settings.port
+
+settings.database_url
+
+settings.jwt_secret
+Why Fail-Fast?
+
+The biggest concept of Module 1.
+
+Suppose
+
+PORT=abcd
+
+Bad backend:
+
+Starts normally.
+
+After 3 hours
+
+Crash.
+
+Good backend:
+
+Immediately crashes.
+
+Why?
+
+Because
+
+PORT
+
+is invalid.
+
+This is called
+
+Fail Fast.
+
+Why is Fail-Fast good?
+
+Imagine deploying to production.
+
+Bad configuration.
+
+Instead of serving users incorrectly,
+
+the server refuses to start.
+
+That is much safer.
+
+Diagram 3
+Invalid Config
+
+       │
+
+       ▼
+
+config.py
+
+       │
+
+Validation
+
+       │
+
+       ▼
+
+Crash Immediately
+
+✔ GOOD
+
+Instead of
+
+Invalid Config
+
+↓
+
+Server Starts
+
+↓
+
+Random Runtime Crash
+
+❌ BAD
+Pydantic Settings
+
+Instead of
+
+PORT=os.getenv()
+
+DATABASE=os.getenv()
+
+Pydantic automatically:
+
+Reads .env
+Converts types
+Validates values
+Throws errors
+PORT Validation
+
+We added
+
+1 <= PORT <= 65535
+
+Why?
+
+Because
+
+PORT=999999
+
+is impossible.
+
+Instead of discovering this later,
+
+the app refuses to boot.
+
+Health Endpoint
+
+We created
+
+GET /health
+
+Response
+
+{
+  "ok": true,
+  "port":8000
+}
+Why?
+
+Imagine Kubernetes.
+
+It asks
+
+GET /health
+
+If
+
+200 OK
+
+The container is healthy.
+
+Otherwise
+
+Restart.
+
+Difference Between / and /health
+
+You visited
+
+/
+
+404
+
+Normal.
+
+Because
+
+No route exists.
+
+You visited
+
+/health
+
+200 OK
+
+Correct.
+
+Biggest Debugging Lesson
+
+Remember this error?
+
+PORT=invalid_port_8000
+
+Application crashed.
+
+Why?
+
+Because
+
+PORT
+
+↓
+
+Expected Integer
+
+↓
+
+Received String
+
+↓
+
+ValidationError
+
+This wasn't a bug.
+
+It was protection.
+
+Regression Testing
+
+After fixing
+
+PORT=8000
+
+Did we assume it works?
+
+No.
+
+We tested.
+
+curl
+
+↓
+
+200 OK
+
+Always verify.
+
+Never assume.
+
+"Works on My Machine"
+
+The biggest professional lesson.
+
+If someone says
+
+It works on my machine.
+
+Ask for:
+
+Git Commit
+
+Python Version
+
+Package Versions
+
+Docker Status
+
+Logs
+
+curl Response
+
+Evidence beats assumptions.
+
+Interview Questions (Very Important)
+Q1. Why use a Monorepo?
+
+Answer:
+To organize multiple services (API, workers, shared libraries) in a single repository while sharing code and allowing independent deployment and scaling.
+
+Q2. Why store configuration in .env?
+
+Answer:
+To separate environment-specific configuration from application code, improving security, portability, and deployment flexibility.
+
+Q3. What is Fail-Fast?
+
+Answer:
+Fail-Fast is the practice of validating configuration and dependencies during startup so the application crashes immediately instead of failing unpredictably at runtime.
+
+Q4. Why use Pydantic Settings?
+
+Answer:
+It provides type-safe configuration management by automatically loading, validating, and converting environment variables.
+
+Q5. Why create /health?
+
+Answer:
+To allow load balancers, orchestrators, and monitoring systems to verify that the service is running correctly.
+
+Q6. Why validate the PORT?
+
+Answer:
+To prevent invalid network configuration from causing runtime failures.
+
+Q7. Why use requirements.txt?
+
+Answer:
+To lock dependency versions and ensure reproducible environments across local development, CI/CD, and production.
+
+Q8. Why use a virtual environment?
+
+Answer:
+To isolate project dependencies and prevent version conflicts with other Python projects.
+
+Module 01 Summary (One Page Revision)
+✅ Learned why backend projects need a strong foundation before business logic.
+✅ Understood Monorepo architecture (apps/api, apps/worker, packages/shared).
+✅ Created an isolated Python virtual environment.
+✅ Installed and froze project dependencies with requirements.txt.
+✅ Centralized configuration using .env and config.py.
+✅ Learned the Fail-Fast startup principle.
+✅ Used Pydantic Settings for type-safe configuration.
+✅ Validated the PORT environment variable.
+✅ Built a /health endpoint for health monitoring.
+✅ Debugged an invalid configuration (PORT=invalid_port_8000).
+✅ Performed regression testing after fixing the bug.
+✅ Learned to rely on evidence, not assumptions ("works on my machine").

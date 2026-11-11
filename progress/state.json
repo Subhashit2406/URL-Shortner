@@ -1,0 +1,45 @@
+{
+  "bootcamp": {
+    "pretest": {
+      "self_rating": "ok",
+      "health_vs_readiness": "demonstrated",
+      "open_redirect_misuse": "demonstrated",
+      "error_investigation": "demonstrated",
+      "idempotency": "demonstrated",
+      "database_index": "demonstrated",
+      "testing_style": "integration_heavy",
+      "environment_preference": "bash_wsl",
+      "effective_level": "ok",
+      "notes": "Student demonstrated clear understanding across system health/readiness, open redirect security risks, 500 error debugging workflows, job idempotency, DB index lookup mechanics, and integration testing."
+    },
+    "product_scenario": {
+      "id": "public_consumer",
+      "name": "Public Consumer Service (Abuse First)",
+      "rationale": "Focus on high anonymous traffic, security, rate limiting, strict URL validation, caching, analytics, and abuse prevention."
+    },
+    "decisions": {
+      "module_01": {
+        "project_layout": "monorepo",
+        "api_root": "apps/api"
+      },
+      "module_02": {
+        "database": "postgres"
+      },
+      "module_03": {
+        "redirect_style": "prefix_r",
+        "redirect_prefix": "r",
+        "links_route": "/links"
+      },
+      "module_04": {
+        "auth_strategy": "api_key"
+      },
+      "module_05": {
+        "error_strategy": "graceful_degradation"
+      },
+      "module_06": {
+        "constraints_twist_type": "abuse_spike",
+        "constraints_twist_action": "implement_now"
+      }
+    }
+  }
+}

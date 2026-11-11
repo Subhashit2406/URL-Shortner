@@ -1,0 +1,38 @@
+Interlude: GitLab Deletes Their Production Database
+
+Delivered between Module 6 (Caching) and Module 7 (Background Jobs)
+
+---
+
+January 31, 2017. ‍​‍​​23:00 UTC.
+
+​​​​​A GitLab engineer is troubleshooting database replication lag. ​​​​‌It is late. ​‌​‌​The team has been fighting the issue for hours. ‌​‌‌‌Replication between the primary and secondary PostgreSQL databases keeps falling behind, and they cannot figure out why.
+
+‌‌​‌‌The engineer decides to wipe the secondary database and re-sync it from scratch. ​‌‌​​A reasonable decision. ​‌​‌‌They run rm -rf on the PostgreSQL data directory.
+
+‌‌‌​‌On the wrong server.
+
+​‌​​​They realize the mistake within seconds. ‌​‌​​They hit Ctrl+C. ​‌‌‌​But rm -rf is fast. ‌​‌​‌300 gigabytes of production data — issues, merge requests, CI pipelines, user projects — gone in moments.
+
+‌​​‌​Now comes the part that makes this story legendary. ​​‌​​GitLab tries to restore from backups. ​‌​​​They discover:
+
+- pg_dump backups: had not been running successfully for months. ‌​‌​​Nobody noticed.
+‌‌​​‌- LVM snapshots: configured but never tested. ​​‌‌‌Did not contain recent data.
+​​​​​- Azure disk snapshots: taken 6 hours prior. ‌​​‌‌Six hours of data, gone.
+‌​​‌​- Replication: the secondary they were trying to fix was the backup.
+
+​‌‌​​Their actual recovery came from a staging database that one engineer had manually copied hours earlier for unrelated testing. ​‌​‌​Pure luck.
+
+​‌​​​GitLab live-streamed the recovery on YouTube. ‌‌​‌​Thousands of engineers watched in real time as the team rebuilt their production database from a staging copy, reconciling 6 hours of lost data. ​​‌‌‌The entire incident was documented publicly with unflinching honesty.
+
+​‌‌‌​The final tally: 6 hours of production data permanently lost. ‌‌‌​​Every issue comment, merge request, and CI result created in that window — gone forever.
+
+​‌​​‌---
+
+Reflection
+
+You just built caching with Redis. ‌​​​​You are about to build background jobs. ​‌‌‌‌Think about this:
+
+1. ​‌​​‌GitLab had five backup methods. ‌‌​‌​None of them worked when it mattered. ​​​‌​Backups that are not tested are not backups — they are hopes. ‌‌​‌​When you deploy your application, how will you verify that your data can actually be restored? ‌​‌​​"We have backups" is not an answer. ‌​‍‌‍"We restored from backup last Tuesday and it took 12 minutes" is.
+
+2. The engineer who ran rm -rf on production was not junior. They were experienced, tired, and under pressure at 11 PM. Systems should be designed so that a single human mistake at 11 PM cannot destroy everything. What safeguards would you build into your deployment to prevent this? Think about confirmation prompts, deletion delays, soft deletes, or separate credentials for destructive operations.

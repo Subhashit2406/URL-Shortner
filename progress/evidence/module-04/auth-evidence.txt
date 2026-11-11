@@ -1,0 +1,15 @@
+﻿=== Module 04 API Key Authentication Boundary Verification ===
+Configured ADMIN_API_KEY: 'dev_admin_api_key_secret_123'
+[1] GET /health (No Auth) -> Status: 200 [EXPECTED: 200]
+[2] GET /links (No Auth) -> Status: 401 [EXPECTED: 401]
+[3] GET /links (Invalid API Key) -> Status: 401 [EXPECTED: 401]
+[4] POST /links (No Auth) -> Status: 401 [EXPECTED: 401]
+[5] POST /links (Valid API Key) -> Status: 201 [EXPECTED: 201]
+    - Created ID:   221e0bd9-97b8-4cfc-bec2-d0e3a8d54489
+    - Created Code: v3cXBo
+[6] GET /links (Valid API Key) -> Status: 200 [EXPECTED: 200]
+[7] GET /links/221e0bd9-97b8-4cfc-bec2-d0e3a8d54489 (Valid API Key) -> Status: 200 [EXPECTED: 200]
+[8] GET /links/221e0bd9-97b8-4cfc-bec2-d0e3a8d54489 (No Auth) -> Status: 401 [EXPECTED: 401]
+[9] GET /r/v3cXBo (No Auth Public Redirect) -> Status: 307 [EXPECTED: 307]
+
+=== All Module 04 Authentication Boundary Tests PASSED! ===

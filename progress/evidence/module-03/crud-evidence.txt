@@ -1,0 +1,22 @@
+﻿=== Module 03 Core API & Security Abuse Verification ===
+[1] GET /health -> Status: 200, Body: {'ok': True, 'port': 8000}
+[2] POST /links (Valid URL) -> Status: 201
+    - Created ID: 7cb8fb17-9e0b-427b-b36a-a8016c06bd57
+    - Code:       nDhyTp
+    - Short URL:  http://localhost:8000/r/nDhyTp
+[3] GET /links -> Status: 200, Total Items: 5
+[4] GET /links/7cb8fb17-9e0b-427b-b36a-a8016c06bd57 -> Status: 200, Matched Code: nDhyTp
+[5] GET /r/nDhyTp -> Status: 307, Location: https://example.com/system-design
+
+--- Running 9 Security Abuse Checks (Expect HTTP 400 Bad Request) ---
+  [PASS] Payload: 'javascript:alert(1)...' (Basic XSS pseudo-scheme) -> Status: 422 [REJECTED]
+  [PASS] Payload: 'JaVaScRiPt:alert(1)...' (Case-insensitive scheme bypass) -> Status: 422 [REJECTED]
+  [PASS] Payload: ' javascript:alert(1) ...' (Leading/trailing whitespace padding) -> Status: 422 [REJECTED]
+  [PASS] Payload: 'data:text/html,<svg/onload=alert(1)...' (Data URI payload) -> Status: 422 [REJECTED]
+  [PASS] Payload: '//evil.example.com...' (Scheme-relative URL) -> Status: 422 [REJECTED]
+  [PASS] Payload: 'http:%2f%2fevil.example.com...' (Encoded slashes) -> Status: 422 [REJECTED]
+  [PASS] Payload: 'http%3A%2F%2Fevil.example.com...' (Encoded scheme) -> Status: 422 [REJECTED]
+  [PASS] Payload: 'http:\\evil.example.com...' (Backslashes in domain host) -> Status: 422 [REJECTED]
+  [PASS] Payload: 'https://good.com@evil.example.com...' (Userinfo credential embedding trick) -> Status: 422 [REJECTED]
+
+Abuse Checks Summary: 9/9 malicious payloads correctly blocked.

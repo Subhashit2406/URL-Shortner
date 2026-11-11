@@ -1,0 +1,94 @@
+{
+  "nonce": "pB0YiZpRbyMRgZB0MgMIb",
+  "events": [
+    {
+      "module": 4,
+      "step": "reflect",
+      "event_type": "module_evaluation",
+      "data": {
+        "narrative": "Student authored an exemplary blameless incident postmortem for the OrderProcessor v2.14 outage. They identified 3 systemic root causes (broad exception suppression, telemetry deficits, schema divergence), replaced human-targeting 'be more careful' wishes with 5 concrete system-level action items with role owners and verifiable definitions of done, and demonstrated total adherence to psychological safety principles.",
+        "overall": 5,
+        "dimension_scores": [
+          {
+            "key": "review_quality",
+            "score": 5,
+            "observation": "Analyzed blame-heavy postmortem with deep rigor, exposing 18 instances of individual targeting and demonstrating why scolding humans fails to prevent system failure.",
+            "evidence": "Identified that blaming John, Maria, and Kevin leaves dangerous application exception-swallowing anti-patterns intact."
+          },
+          {
+            "key": "writing_clarity",
+            "score": 5,
+            "observation": "Prose is scannable, structured, and precise, featuring an executive summary, chronological incident timeline, and 5-whys root cause analysis.",
+            "evidence": "Authored apps/api/postmortem.md with clear headings, tables, and active-voice descriptions."
+          },
+          {
+            "key": "audience_awareness",
+            "score": 5,
+            "observation": "Tailored tone for both executive stakeholders (1-paragraph revenue/impact summary) and engineering teams (deep technical 5-whys & telemetry gaps).",
+            "evidence": "Included high-level revenue impact ($186k, 1,400 orders) upfront followed by technical exception-handling analysis."
+          },
+          {
+            "key": "structure_quality",
+            "score": 5,
+            "observation": "Followed standard postmortem hierarchy strictly: Summary, Timeline, Root Cause(s), Contributing Factors, Action Items, and Lessons Learned.",
+            "evidence": "Organized postmortem in apps/api/postmortem.md with markdown headings and structured action item tables."
+          },
+          {
+            "key": "actionability",
+            "score": 5,
+            "observation": "Created 5 fully actionable system changes with role-based ownership, target deadlines, and verifiable definitions of done.",
+            "evidence": "Action item ACT-02 specified exact metric (orders_created_total) and alert threshold (0 orders for 5 consecutive minutes)."
+          }
+        ],
+        "strengths": [
+          "Authored complete blameless postmortem for OrderProcessor v2.14 with zero individual names in root cause or action item sections.",
+          "Identified systemic root cause (broad exception suppression and telemetry gaps) rather than blaming human triggers.",
+          "Converted all 'be more careful' wishes into verifiable system-level engineering action items with role owners and definitions of done."
+        ],
+        "growth_areas": [],
+        "recommendation": "Advance to Module 05 to apply technical communication practices to API Documentation & Developer Experience.",
+        "public_evidence": [
+          {
+            "artifact": "apps/api/postmortem.md",
+            "student_action": "Authored comprehensive blameless incident postmortem for OrderProcessor v2.14 release outage.",
+            "technical_detail": "Root cause analysis on broad exception suppression, telemetry gaps, and stale rollback script paths.",
+            "proof": "apps/api/postmortem.md",
+            "ability": "Blameless Incident Communication & Root Cause Analysis",
+            "reviewer_value": "Demonstrates senior-level engineering leadership, incident response communication, and systems thinking.",
+            "confidence": "demonstrated"
+          }
+        ],
+        "student_knowledge": {
+          "terminology_gaps": [],
+          "concepts_demonstrated": [
+            {
+              "concept": "Blameless postmortem",
+              "evidence": "Authored postmortem without individual names and focused on systemic anti-patterns."
+            },
+            {
+              "concept": "Five whys",
+              "evidence": "Executed 5-whys root cause analysis tracing from symptom to broad exception suppression."
+            },
+            {
+              "concept": "Contributing factor",
+              "evidence": "Identified stale rollback script paths and single-metric triage as amplifying factors."
+            }
+          ],
+          "teaching_approaches": [
+            {
+              "concept": "blameless-culture",
+              "approach": "example",
+              "detail": "Side-by-side comparison of blame-heavy vs systemic postmortems",
+              "effective": true
+            }
+          ],
+          "effective_level": "intermediate",
+          "learning_style_signals": [
+            "hands-on practice"
+          ],
+          "confidence_level": "high"
+        }
+      }
+    }
+  ]
+}

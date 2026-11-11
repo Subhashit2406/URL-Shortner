@@ -1,0 +1,9 @@
+﻿=== Module 02 Database Seed & Query Verification ===
+[1] Database schema created/verified.
+[2] Inserted Link: id=19a63535-8383-4aa4-aee5-ef02abc49193, code=demo-link-99
+[3] Inserted ClickEvent for link_id=19a63535-8383-4aa4-aee5-ef02abc49193
+[4] Query-by-code SUCCESS:
+    - Requested Code: demo-link-99
+    - Selected Code:  demo-link-99
+    - Matched URL:    https://example.com/system-design-fundamentals
+    - Created By:     instructor-test-user

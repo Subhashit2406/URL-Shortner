@@ -1,0 +1,70 @@
+{
+  "session_id": null,
+  "skill": {
+    "id": "sk_6c2a9da0684cd5b58330",
+    "slug": "decomposition-execution-planning",
+    "name": "Decomposition & Execution Planning",
+    "version": "1.0.0"
+  },
+  "pack": {
+    "id": "spk_decomposition_execution_planning_operator",
+    "slug": "operator",
+    "name": "Operator",
+    "order": 3,
+    "access_state": "unlocked"
+  },
+  "module": {
+    "number": 8,
+    "label": "MODULE 08"
+  },
+  "step": {
+    "id": "completion",
+    "label": "COMPLETION"
+  },
+  "content": "This skill is complete. Retakes are not available yet.",
+  "achievements": [],
+  "prompt_suggestions": [
+    {
+      "id": "status_all",
+      "label": "View All Progress",
+      "command": "upsk status --all",
+      "reason": "Review completed and active skills.",
+      "priority": 1
+    },
+    {
+      "id": "catalog",
+      "label": "View Catalog",
+      "command": "upsk catalog",
+      "reason": "Choose another available skill.",
+      "priority": 2
+    }
+  ],
+  "data": {
+    "status": "completed",
+    "message": "This skill is complete. Retakes are not available yet.",
+    "progress_percent": 100,
+    "strong_streak": 0,
+    "elapsed_seconds": null,
+    "module_names": [],
+    "journey_map": [],
+    "decisions": {},
+    "modules_in_pack": null,
+    "other_active_sessions": [],
+    "profile_created": null,
+    "profile_confirmed": null,
+    "profile_ready": null,
+    "public_profile_ready": null,
+    "profile_url": null,
+    "missing_profile_fields": [],
+    "missing_public_profile_fields": [],
+    "access_changes": {
+      "has_any_change": false,
+      "skills": []
+    },
+    "student_memory": null,
+    "agent_context": null,
+    "workspace_route": null,
+    "completed_at": "2026-08-26T05:06:32.936Z",
+    "skill_completed": true
+  }
+}

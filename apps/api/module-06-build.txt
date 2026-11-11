@@ -1,0 +1,87 @@
+STEP 3: BUILD
+
+Code generation starts now.
+
+‍​‍​​​​​​​Minimum caching requirements:
+
+- Cache redirect resolution code -> long_url with TTL.
+​​​​‌​‌​‌​- On update/delete, ensure cache invalidation.
+‌​‌‌‌‌‌​‌‌- If Redis is down:
+  - redirect should still work by falling back to DB (graceful path)
+
+NestJS Track
+
+- Add Redis client (ioredis or node-redis).
+​‌‌​​​‌​‌‌- Create a cache service with functions:
+  - getRedirectTarget(code)
+  - setRedirectTarget(code, url, ttlSeconds)
+  - invalidateRedirectTarget(code)
+- Wire redirect controller/service to use the chosen strategy.
+
+‌‌‌​‌​‌​​​Evidence (What To Run):
+
+- Ensure Redis is running and REDIS_URL points at the local Redis instance already configured for your workspace.
+‌​‌​​​‌‌‌​- Use an existing <CODE> from Module 03.
+‌​‌​‌‌​​‌​- First redirect: DB hit + cache set
+  - If you chose /r/<code>:
+    - bash (NestJS): curl -i "http://localhost:3000/r/<CODE>"
+    - PowerShell (NestJS): curl.exe -i "http://localhost:3000/r/<CODE>"
+  - If you chose /<code>:
+    - bash (NestJS): curl -i "http://localhost:3000/<CODE>"
+    - PowerShell (NestJS): curl.exe -i "http://localhost:3000/<CODE>"
+- Second redirect: cache hit (prove via logs/counters)
+- Update link: cache invalidated (prove redirect goes to the new URL)
+  - Pick the link id from your create-link response: <LINK_ID>
+  - Update (protected; use the auth header you chose in Module 04):
+    - bash (JWT): curl -i -X PATCH "http://localhost:3000/<links-route>/<LINK_ID>" -H "Authorization: Bearer <TOKEN>" -H "Content-Type: application/json" -d '{"long_url":"https://example.org"}'
+    - bash (API key): curl -i -X PATCH "http://localhost:3000/<links-route>/<LINK_ID>" -H "X-API-Key: <API_KEY_A>" -H "Content-Type: application/json" -d '{"long_url":"https://example.org"}'
+    - PowerShell (JWT): curl.exe -i -X PATCH "http://localhost:3000/<links-route>/<LINK_ID>" -H "Authorization: Bearer <TOKEN>" -H "Content-Type: application/json" -d '{"long_url":"https://example.org"}'
+    - PowerShell (API key): curl.exe -i -X PATCH "http://localhost:3000/<links-route>/<LINK_ID>" -H "X-API-Key: <API_KEY_A>" -H "Content-Type: application/json" -d '{"long_url":"https://example.org"}'
+  - Then redirect again and confirm the Location header points at the new URL.
+​​‌​​​‌​​​- Redis down drill:
+  - stop Redis (example if your local container is named bootcamp-redis): docker stop bootcamp-redis, then restart your API and prove redirect still works via DB fallback
+  - or temporarily break REDIS_URL, restart, and prove redirect still works via DB fallback
+
+Expected:
+
+- First redirect sets the cache; second redirect is a cache hit (proved via logs/counters).
+‌​‌​​‌‌​​‌- After update/delete, redirect does not serve stale data.
+​​‌‌‌​​​​​- With Redis down, redirect still succeeds via DB fallback (maybe slower).
+
+‌​​‌‌‌​​‌​FastAPI Track
+
+- Add Redis client (redis-py asyncio).
+​‌‌​​​‌​‌​- Create cache helper/service functions similar to above.
+​‌​​​‌‌​‌​- Wire redirect route to use cache.
+
+​​‌‌‌​‌‌‌​Evidence (What To Run):
+
+- Ensure Redis is running and REDIS_URL points at the local Redis instance already configured for your workspace.
+‌‌‌​​​‌​​‌- Use an existing <CODE> from Module 03.
+‌​​​​​‌‌‌‌- First redirect: DB hit + cache set
+  - If you chose /r/<code>:
+    - bash (FastAPI): curl -i "http://localhost:8000/r/<CODE>"
+    - PowerShell (FastAPI): curl.exe -i "http://localhost:8000/r/<CODE>"
+  - If you chose /<code>:
+    - bash (FastAPI): curl -i "http://localhost:8000/<CODE>"
+    - PowerShell (FastAPI): curl.exe -i "http://localhost:8000/<CODE>"
+- Second redirect: cache hit (prove via logs/counters)
+- Update link: cache invalidated (prove redirect goes to the new URL)
+  - Pick the link id from your create-link response: <LINK_ID>
+  - Update (protected; use the auth header you chose in Module 04):
+    - bash (JWT): curl -i -X PATCH "http://localhost:8000/<links-route>/<LINK_ID>" -H "Authorization: Bearer <TOKEN>" -H "Content-Type: application/json" -d '{"long_url":"https://example.org"}'
+    - bash (API key): curl -i -X PATCH "http://localhost:8000/<links-route>/<LINK_ID>" -H "X-API-Key: <API_KEY_A>" -H "Content-Type: application/json" -d '{"long_url":"https://example.org"}'
+    - PowerShell (JWT): curl.exe -i -X PATCH "http://localhost:8000/<links-route>/<LINK_ID>" -H "Authorization: Bearer <TOKEN>" -H "Content-Type: application/json" -d '{"long_url":"https://example.org"}'
+    - PowerShell (API key): curl.exe -i -X PATCH "http://localhost:8000/<links-route>/<LINK_ID>" -H "X-API-Key: <API_KEY_A>" -H "Content-Type: application/json" -d '{"long_url":"https://example.org"}'
+  - Then redirect again and confirm the Location header points at the new URL.
+​‌​​‌‌‌​‌​- Redis down drill:
+  - stop Redis (example if your local container is named bootcamp-redis): docker stop bootcamp-redis, then restart your API and prove redirect still works via DB fallback
+  - or temporarily break REDIS_URL, restart, and prove redirect still works via DB fallback
+
+Expected:
+
+- First redirect sets the cache; second redirect is a cache hit (proved via logs/counters).
+​​​‌​‌‌​‌​- After update/delete, redirect does not serve stale data.
+‌​‌​​‌​‍‌‍- With Redis down, redirect still succeeds via DB fallback (maybe slower).
+
+PAUSE: Explain why caching is not “free performance”.

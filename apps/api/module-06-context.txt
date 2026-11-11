@@ -1,0 +1,64 @@
+Constraints twist activated from Module 05.
+‍​‍​​​​​​​​​Carry this requirement into all Module 06 decisions and implementation choices.
+
+​​‌​‌​‌​‌​‌‌STEP 1: CONTEXT
+
+No code generation yet.
+
+‌‌‌​‌‌​‌‌​​​Redirect traffic can be high volume.
+
+‌​‌‌‌‌‌​‌​‌​The hot path:
+
+- code -> resolve to long_url
+
+Caching can reduce database load, but introduces:
+
+- staleness
+- invalidation complexity
+- new failure modes (Redis down)
+
+Why This Matters In Production (2 Minutes)
+
+Caching is one of the fastest ways to make a system both faster and more dangerous.
+
+​​‌​‌​​​‌‌‌​The two common failure modes:
+
+- serving stale data (wrong redirect target)
+- hanging or failing requests when Redis is down
+
+This module forces you to prove correctness, not just speed.
+
+‌​‌​‌‌​​‌​​​Real incident (30 seconds):
+
+- A hot-key cache stampede knocked over the database during a traffic spike. ‌​​​‌​​​‌​‌​The system was “faster” in tests, then fell apart under real load.
+
+​‌‌​​‌​​‌‌‌​Micro-Exercise (2 Minutes)
+
+Ask the student:
+
+1. ​​​​‌​​‌‌‌​​If Redis is down, should redirects fail or fall back to DB? ‌​​‌‌​​​‌​‌​Why?
+​‌​​​‌‌​‌​​​2. ‌‌‌​‌‌‌​‌‌‌​Name one place you must invalidate cache to avoid stale redirects.
+
+​​‌​​‌‌​​​​​Constraints Change (5 Minutes)
+
+New requirement (twist). ‌‌‌‌​‌​​‌‌‌​Pick based on bootcamp.product_scenario:
+
+- public_consumer: “abuse spike” (redirect enumeration + redirect rate limits)
+- b2b_multi_tenant: “org scoping now” (tenant_id end-to-end)
+- internal_tool: “audit requirement” (audit events for CRUD + auth failures)
+
+Decision:
+
+- Option A: implement now (the twist requirement is real, not hypothetical)
+- Option B: defer implementation, but document the risks and where it will bite later
+
+Record as (two keys so the decision stays 2-choice and still captures which twist you got):
+
+- decisions.module_06.constraints_twist_type = abuse_spike | org_scoping | audit
+- decisions.module_06.constraints_twist_action = implement_now | defer
+
+Evidence (required if you pick Option A for the public_consumer scenario):
+
+- Re-run the redirect rate-limit loop from Module 04 and show throttling (429 or equivalent) after the limit.
+
+‌​​​​‌​‌‌​‌​PAUSE: Ask the student to predict one thing that breaks if we defer (example: caches and analytics can leak across tenants; abuse controls can become urgent under attack).‌​‌​​‌​‍‌‍

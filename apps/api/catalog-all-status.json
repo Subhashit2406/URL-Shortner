@@ -1,0 +1,49 @@
+{
+  "session_id": null,
+  "module": null,
+  "step": null,
+  "content": "No learning session is active yet. Start one with upsk start.",
+  "achievements": [],
+  "prompt_suggestions": [
+    {
+      "id": "start",
+      "label": "Start Learning",
+      "command": "upsk start",
+      "reason": "Start your learning session.",
+      "priority": 1
+    },
+    {
+      "id": "catalog",
+      "label": "View Catalog",
+      "command": "upsk catalog",
+      "reason": "Choose a skill before starting.",
+      "priority": 2
+    }
+  ],
+  "data": {
+    "status": "not_started",
+    "message": "No learning session is active yet. Start one with upsk start.",
+    "progress_percent": 0,
+    "strong_streak": 0,
+    "elapsed_seconds": null,
+    "module_names": [],
+    "journey_map": [],
+    "decisions": {},
+    "modules_in_pack": null,
+    "other_active_sessions": [],
+    "profile_created": null,
+    "profile_confirmed": null,
+    "profile_ready": null,
+    "public_profile_ready": null,
+    "profile_url": null,
+    "missing_profile_fields": [],
+    "missing_public_profile_fields": [],
+    "access_changes": {
+      "has_any_change": false,
+      "skills": []
+    },
+    "student_memory": null,
+    "agent_context": null,
+    "workspace_route": null
+  }
+}

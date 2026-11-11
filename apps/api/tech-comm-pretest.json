@@ -1,0 +1,39 @@
+{
+  "nonce": null,
+  "events": [
+    {
+      "module": 1,
+      "step": "pretest",
+      "event_type": "pretest",
+      "data": {
+        "answers": [
+          {
+            "question_id": 1,
+            "answer": "Consider refactoring these nested conditionals to use early returns (guard clauses). Handing invalid/edge cases first keeps the main logic linear, easier to read, and simpler to test."
+          },
+          {
+            "question_id": 2,
+            "answer": "Think of Service B like a busy kitchen counter. If Service A makes direct calls, it has to stand at the counter waiting for its food while blocking all other work. By using a message queue\u2014like a ticket hook\u2014Service A leaves its order and immediately returns to helping users, while Service B processes orders at a steady pace without crashing during peak lunch rushes."
+          },
+          {
+            "question_id": 3,
+            "answer": "Resolved search latency issue, reducing response times from 2.3s to 180ms by adding a missing database index. Monitoring is currently being added to detect unindexed queries automatically."
+          },
+          {
+            "question_id": 4,
+            "answer": "Between 2:15 PM and 3:00 PM, user logins failed due to a mismatched API endpoint URL deployed at 2:00 PM. The issue was identified by 2:30 PM, fixed at 2:45 PM, and full service restored by 3:00 PM. System configuration validation is being updated to prevent URL mismatch regressions."
+          },
+          {
+            "question_id": 5,
+            "answer": "I would document an API Quickstart Guide containing authentication setup, request/response examples with curl commands, and common error status codes so consuming teams can integrate in under 10 minutes."
+          }
+        ],
+        "coaching_baseline": {
+          "audience_awareness": "high",
+          "jargon_awareness": "high",
+          "tone": "constructive"
+        }
+      }
+    }
+  ]
+}

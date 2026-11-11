@@ -1,0 +1,36 @@
+STEP 1: CONTEXT
+
+No code generation yet.
+
+‍​‍​​​​​​​​​​​‌​‌​‌​‌​A real product needs discovery:
+
+- find links by URL substring
+- filter by tags
+- sort by created time or click count
+
+Search is where many systems fail:
+
+- performance (slow queries)
+- correctness (pagination bugs)
+- security (injection)
+
+Why This Matters In Production (2 Minutes)
+
+Search endpoints often become the top source of outages because they combine:
+
+- unbounded queries (expensive)
+- user-controlled inputs (security risk)
+- lots of edge cases (correctness)
+
+The goal is not “fancy search”. ‌‌‌‌‌​‌‌​‌‌​​​‌​‌‌‌‌‌​The goal is “safe and predictable search”.
+
+‌​‌​​​‌​‌​​​‌‌‌​‌​‌​‌‌Real incident (30 seconds):
+
+- An unbounded search query triggered full table scans during peak traffic and took down the primary database. ​​‌​​​‌​​​‌​​​‌​‌​​‌‌​“Just add search” turned into an outage.
+
+​‌​​‌‌‌​​​​​‌​​‌‌‌​​‌​Micro-Exercise (2 Minutes)
+
+Ask the student:
+
+1. ​‌‌​​​‌​‌​​‌​​​‌‌​‌​​​What is the maximum page_size you will allow, and why?
+‌‌‌​‌‌‌​‌‌‌​​​‌​​‌‌​​​2. ​​‌‌‌‌​‌​​‌‌‌​‌​​​​‌​‌What is one input you will allowlist (not free-form) to prevent injection?‌​‌​‌​‌​​‌​‍‌‍
